@@ -295,3 +295,60 @@ footer {
 .tooltip-text {
     display: none;
 }
+/* Модальное окно для подсказок на мобильных */
+.modal-tooltip {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 100000;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.modal-tooltip.active {
+    display: flex;
+}
+
+.modal-content {
+    background: #1e293b;
+    color: #f1f5f9;
+    border-radius: 16px;
+    padding: 1.5rem;
+    max-width: 85%;
+    max-height: 80%;
+    overflow-y: auto;
+    position: relative;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    word-wrap: break-word;
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #f1f5f9;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.modal-close:hover {
+    color: #ef4444;
+}
+
+/* Скрываем стандартные подсказки на тач-устройствах */
+@media (pointer: coarse) {
+    .tooltip-term {
+        cursor: pointer;
+    }
+}
