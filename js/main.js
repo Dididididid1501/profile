@@ -1,54 +1,7 @@
-// Определяем, нужно ли использовать модальные окна (для сенсорных экранов)
-function isTouchDevice() {
-    return ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || (window.matchMedia("(pointer: coarse)").matches);
-}
-
-if (isTouchDevice() || window.innerWidth <= 768) {
-    // ---- Мобильная версия: модальное окно по клику ----
-    (function() {
-        // Создаём overlay и модалку
-        const overlay = document.createElement('div');
-        overlay.className = 'tooltip-modal-overlay';
-        const modal = document.createElement('div');
-        modal.className = 'tooltip-modal';
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'tooltip-modal-close';
-        closeBtn.innerHTML = '✕';
-        modal.appendChild(closeBtn);
-        const modalText = document.createElement('div');
-        modal.appendChild(modalText);
-        overlay.appendChild(modal);
-        document.body.appendChild(overlay);
-
-        let currentText = '';
-
-        function closeModal() {
-            overlay.classList.remove('active');
-        }
-
-        closeBtn.addEventListener('click', closeModal);
-        overlay.addEventListener('click', (e) => {
-            if (e.target === overlay) closeModal();
-        });
-
-        // Находим все термины с подсказками
-        const terms = document.querySelectorAll('.tooltip-term');
-        terms.forEach(term => {
-            const tooltipSpan = term.querySelector('.tooltip-text');
-            if (!tooltipSpan) return;
-            const text = tooltipSpan.textContent; // безопасно, без HTML
-
-            term.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                modalText.textContent = text;
-                overlay.classList.add('active');
-            });
-        });
-    })();
-} else {
-    // ---- Десктопная версия: тултип при наведении (существующий код) ----
-    (function() {
+// ---- Десктопная версия: тултип при наведении ----
+(function() {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (!isTouch) {
         const tooltip = document.createElement('div');
         tooltip.id = 'global-tooltip';
         tooltip.style.cssText = `
@@ -119,25 +72,27 @@ if (isTouchDevice() || window.innerWidth <= 768) {
                 timeout = setTimeout(hideTooltip, 100);
             });
         });
-    })();
-}
-// Модальное окно для мобильных подсказок
-(function() {
-    // Определяем, является ли устройство сенсорным
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    }
+})();
 
-    if (!isTouchDevice) return; // на десктопе ничего не меняем
+// ---- Мобильная версия: модальное окно по клику ----
+(function() {
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (!isTouch) return; // только для сенсорных устройств
 
     // Создаём модальное окно
-    const modal = document.createElement('div');
-    modal.className = 'modal-tooltip';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <button class="modal-close">&times;</button>
-            <div class="modal-text"></div>
-        </div>
-    `;
-    document.body.appendChild(modal);
+    let modal = document.querySelector('.modal-tooltip');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.className = 'modal-tooltip';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <button class="modal-close">&times;</button>
+                <div class="modal-text"></div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+    }
 
     const modalText = modal.querySelector('.modal-text');
     const closeBtn = modal.querySelector('.modal-close');
@@ -151,12 +106,9 @@ if (isTouchDevice() || window.innerWidth <= 768) {
 
     // Находим все термины с подсказками
     const terms = document.querySelectorAll('.tooltip-term');
-
     terms.forEach(term => {
         const tooltipSpan = term.querySelector('.tooltip-text');
         if (!tooltipSpan) return;
-
-        // Получаем текст подсказки (с учётом возможных \n)
         const text = tooltipSpan.textContent;
 
         term.addEventListener('click', (e) => {
@@ -167,7 +119,8 @@ if (isTouchDevice() || window.innerWidth <= 768) {
         });
     });
 })();
-// Анимация появления при скролле (без изменений)
+
+// Анимация появления при скролле
 const fadeElements = document.querySelectorAll('.fade-up');
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
