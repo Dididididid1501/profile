@@ -121,7 +121,52 @@ if (isTouchDevice() || window.innerWidth <= 768) {
         });
     })();
 }
+// Модальное окно для мобильных подсказок
+(function() {
+    // Определяем, является ли устройство сенсорным
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
+    if (!isTouchDevice) return; // на десктопе ничего не меняем
+
+    // Создаём модальное окно
+    const modal = document.createElement('div');
+    modal.className = 'modal-tooltip';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="modal-close">&times;</button>
+            <div class="modal-text"></div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    const modalText = modal.querySelector('.modal-text');
+    const closeBtn = modal.querySelector('.modal-close');
+
+    // Закрытие по клику на фон или кнопку
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal || e.target === closeBtn) {
+            modal.classList.remove('active');
+        }
+    });
+
+    // Находим все термины с подсказками
+    const terms = document.querySelectorAll('.tooltip-term');
+
+    terms.forEach(term => {
+        const tooltipSpan = term.querySelector('.tooltip-text');
+        if (!tooltipSpan) return;
+
+        // Получаем текст подсказки (с учётом возможных \n)
+        const text = tooltipSpan.textContent;
+
+        term.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            modalText.innerHTML = text.replace(/\n/g, '<br>');
+            modal.classList.add('active');
+        });
+    });
+})();
 // Анимация появления при скролле (без изменений)
 const fadeElements = document.querySelectorAll('.fade-up');
 const observer = new IntersectionObserver((entries) => {
