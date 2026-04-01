@@ -293,19 +293,5 @@ footer {
     cursor: help;
 }
 .tooltip-text {
-    visibility: hidden;
-    opacity: 0;
-    position: absolute;
-    bottom: 150%;
-    left: 0;
-    background: #1e293b;
-    color: #f1f5f9;
-    font-size: 0.75rem;
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
-    white-space: nowrap;
-    z-index: 10;
-    transition: all 0.2s ease;
-    pointer-events: none;
-    font-weight: normal;
+    display: none;
 }
