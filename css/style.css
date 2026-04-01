@@ -266,6 +266,7 @@ footer {
     .navbar {
         flex-direction: column;
         gap: 0.5rem;
+        padding: 0.75rem 1rem;
     }
     .nav-links {
         gap: 1rem;
@@ -285,8 +286,35 @@ footer {
     .hero h1 {
         font-size: 1.8rem;
     }
+    .contact-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .contact-buttons a {
+        width: 100%;
+        max-width: 250px;
+        justify-content: center;
+    }
+    .contact-section {
+        padding: 1.5rem;
+    }
+    footer {
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    footer p {
+        font-size: 0.7rem;
+    }
+    .skills-grid,
+    .projects-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .card {
+        padding: 1rem;
+    }
 }
-
 /* Optional: базовое подчёркивание для терминов с тултипом */
 .tooltip-term {
     border-bottom: 1px dashed #3b82f6;
