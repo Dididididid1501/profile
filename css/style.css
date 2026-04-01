@@ -1,0 +1,311 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+}
+
+/* Navigation */
+.navbar {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.75rem 2rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+.nav-links a {
+    text-decoration: none;
+    color: #334155;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+.nav-links a:hover {
+    color: #3b82f6;
+}
+
+/* Hero */
+.hero {
+    text-align: center;
+    padding: 4rem 2rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+.hero h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+.hero .sub {
+    font-size: 1.125rem;
+    color: #3b82f6;
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.hero p {
+    max-width: 600px;
+    margin: 0 auto;
+    color: #475569;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+
+/* Resume grid */
+.resume-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+.section-title {
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #3b82f6;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}
+.skill-list {
+    list-style: none;
+}
+.skill-list li {
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+.skill-list li i {
+    width: 1.25rem;
+    color: #3b82f6;
+}
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+.skill-tag {
+    background: #eef2ff;
+    color: #1e40af;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.skill-tag:hover {
+    background: #3b82f6;
+    color: white;
+    /* удалили transform: scale(1.02); */
+    box-shadow: 0 2px 8px rgba(59,130,246,0.2);
+}
+.job-item {
+    margin-bottom: 1.75rem;
+}
+.job-header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: baseline;
+    margin-bottom: 0.25rem;
+}
+.job-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+.job-date {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+.job-company {
+    font-weight: 500;
+    color: #3b82f6;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+.job-description ul {
+    padding-left: 1.25rem;
+    margin-top: 0.25rem;
+}
+.job-description li {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+.achievement {
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    color: #3b82f6;
+    font-weight: 500;
+}
+
+/* Projects */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.project-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.25rem;
+    transition: all 0.2s;
+    border: 1px solid #e2e8f0;
+}
+.project-card:hover {
+    border-color: #3b82f6;
+    transform: translateY(-3px);
+}
+.project-card i {
+    font-size: 1.5rem;
+    color: #3b82f6;
+    margin-bottom: 0.75rem;
+}
+.project-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Contact */
+.contact-section {
+    background: #f1f5f9;
+    border-radius: 20px;
+    padding: 2rem;
+    text-align: center;
+    margin-top: 1rem;
+}
+.contact-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+.contact-buttons a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #3b82f6;
+    color: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+.contact-buttons a:hover {
+    background: #2563eb;
+}
+
+/* Animations */
+.fade-up {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 2rem;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .nav-links {
+        gap: 1rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .resume-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    .container {
+        padding: 0 1rem;
+    }
+    .hero {
+        padding: 2rem 1rem;
+    }
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+}
+
+/* Optional: базовое подчёркивание для терминов с тултипом */
+.tooltip-term {
+    border-bottom: 1px dashed #3b82f6;
+    cursor: help;
+}
+.tooltip-text {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 150%;
+    left: 0;
+    background: #1e293b;
+    color: #f1f5f9;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
+    white-space: nowrap;
+    z-index: 10;
+    transition: all 0.2s ease;
+    pointer-events: none;
+    font-weight: normal;
+}
