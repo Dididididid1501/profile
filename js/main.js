@@ -1,11 +1,11 @@
-// ---- Десктопная версия: тултип при наведении с оптимизацией ----
+// ---- Десктопная версия: статический тултип (не следует за мышью) ----
 (function() {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!isTouch) {
         const tooltip = document.createElement('div');
         tooltip.id = 'global-tooltip';
         tooltip.style.cssText = `
-            position: fixed;
+            position: absolute;
             background: #1e293b;
             color: #f1f5f9;
             font-size: 0.75rem;
@@ -17,7 +17,7 @@
             z-index: 99999;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.15s;
+            transition: opacity 0.15s ease;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             font-family: inherit;
             line-height: 1.4;
@@ -25,86 +25,62 @@
         document.body.appendChild(tooltip);
 
         const terms = document.querySelectorAll('.tooltip-term');
-        let timeoutHide = null;
-        let currentText = '';
-        let isVisible = false;
+        let hideTimeout = null;
+        let activeTerm = null;
 
-        // Throttle для обновления позиции (не чаще 20мс)
-        let throttleTimer = null;
-        function throttledUpdatePosition(event) {
-            if (throttleTimer) return;
-            throttleTimer = setTimeout(() => {
-                updateTooltipPosition(event);
-                throttleTimer = null;
-            }, 20);
+        function positionTooltip(term) {
+            const rect = term.getBoundingClientRect();
+            const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            // Показываем снизу от термина
+            let top = rect.bottom + scrollTop + 5;
+            let left = rect.left + scrollLeft + (rect.width / 2) - (tooltip.offsetWidth / 2);
+            // Коррекция по горизонтали, чтобы не выходил за экран
+            if (left + tooltip.offsetWidth > window.innerWidth + scrollLeft) {
+                left = window.innerWidth + scrollLeft - tooltip.offsetWidth - 10;
+            }
+            if (left < scrollLeft) {
+                left = scrollLeft + 10;
+            }
+            // Если снизу не влезает, показываем сверху
+            if (top + tooltip.offsetHeight > window.innerHeight + scrollTop) {
+                top = rect.top + scrollTop - tooltip.offsetHeight - 5;
+            }
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
         }
 
-        function updateTooltipPosition(event) {
-            let left = event.clientX + 15;
-            let top = event.clientY - 30;
-            // Получаем размеры тултипа
-            const rect = tooltip.getBoundingClientRect();
-            // Если тултип еще не виден, его размеры могут быть 0, но после установки текста они появятся
-            // Используем requestAnimationFrame для корректировки после рендера
-            requestAnimationFrame(() => {
-                const newRect = tooltip.getBoundingClientRect();
-                let finalLeft = left;
-                let finalTop = top;
-                if (newRect.right > window.innerWidth) {
-                    finalLeft = window.innerWidth - newRect.width - 10;
-                }
-                if (newRect.left < 0) {
-                    finalLeft = 10;
-                }
-                if (newRect.bottom > window.innerHeight) {
-                    finalTop = window.innerHeight - newRect.height - 10;
-                }
-                tooltip.style.left = finalLeft + 'px';
-                tooltip.style.top = finalTop + 'px';
-            });
-        }
-
-        function showTooltip(event, text) {
-            if (currentText === text && isVisible) {
-                // Если уже показан тот же текст, просто обновляем позицию
-                throttledUpdatePosition(event);
+        function showTooltip(term, text) {
+            if (hideTimeout) clearTimeout(hideTimeout);
+            if (activeTerm === term && tooltip.style.opacity === '1') {
                 return;
             }
-            currentText = text;
             tooltip.textContent = text;
-            tooltip.style.opacity = '1';
-            isVisible = true;
-            updateTooltipPosition(event);
+            tooltip.style.opacity = '0';
+            positionTooltip(term);
+            // Небольшая задержка, чтобы позиция применилась
+            requestAnimationFrame(() => {
+                tooltip.style.opacity = '1';
+            });
+            activeTerm = term;
         }
 
         function hideTooltip() {
-            if (timeoutHide) clearTimeout(timeoutHide);
-            timeoutHide = setTimeout(() => {
+            if (hideTimeout) clearTimeout(hideTimeout);
+            hideTimeout = setTimeout(() => {
                 tooltip.style.opacity = '0';
-                isVisible = false;
-                currentText = '';
+                activeTerm = null;
             }, 100);
         }
 
         terms.forEach(term => {
-            const tooltipText = term.querySelector('.tooltip-text');
-            if (!tooltipText) return;
-            const text = tooltipText.textContent;
+            const tooltipSpan = term.querySelector('.tooltip-text');
+            if (!tooltipSpan) return;
+            const text = tooltipSpan.textContent;
 
-            term.addEventListener('mouseenter', (e) => {
-                if (timeoutHide) {
-                    clearTimeout(timeoutHide);
-                    timeoutHide = null;
-                }
-                showTooltip(e, text);
+            term.addEventListener('mouseenter', () => {
+                showTooltip(term, text);
             });
-
-            term.addEventListener('mousemove', (e) => {
-                if (isVisible) {
-                    throttledUpdatePosition(e);
-                }
-            });
-
             term.addEventListener('mouseleave', () => {
                 hideTooltip();
             });
@@ -115,9 +91,8 @@
 // ---- Мобильная версия: модальное окно по клику ----
 (function() {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    if (!isTouch) return; // только для сенсорных устройств
+    if (!isTouch) return;
 
-    // Создаём модальное окно
     let modal = document.querySelector('.modal-tooltip');
     if (!modal) {
         modal = document.createElement('div');
@@ -130,24 +105,18 @@
         `;
         document.body.appendChild(modal);
     }
-
     const modalText = modal.querySelector('.modal-text');
     const closeBtn = modal.querySelector('.modal-close');
-
-    // Закрытие по клику на фон или кнопку
     modal.addEventListener('click', (e) => {
         if (e.target === modal || e.target === closeBtn) {
             modal.classList.remove('active');
         }
     });
-
-    // Находим все термины с подсказками
     const terms = document.querySelectorAll('.tooltip-term');
     terms.forEach(term => {
         const tooltipSpan = term.querySelector('.tooltip-text');
         if (!tooltipSpan) return;
         const text = tooltipSpan.textContent;
-
         term.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -157,7 +126,7 @@
     });
 })();
 
-// Анимация появления при скролле
+// ---- Анимация появления при скролле ----
 const fadeElements = document.querySelectorAll('.fade-up');
 const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
