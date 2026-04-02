@@ -58,7 +58,11 @@ body {
 .hero h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin-bottom: 0.5rem;
+}
+.hero .age {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
 }
 .hero .sub {
     font-size: 1.125rem;
@@ -273,9 +277,19 @@ footer {
         flex-wrap: wrap;
         justify-content: center;
     }
+    /* Принудительно меняем порядок колонок: сначала правая (опыт), потом левая (навыки) */
     .resume-grid {
-        grid-template-columns: 1fr;
-        gap: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    .resume-grid > div:first-child {
+        order: 2; /* левая колонка (навыки) — второй */
+    }
+    .resume-grid > div:last-child {
+        order: 1; /* правая колонка (опыт) — первый */
+    }
+}
+
     }
     .container {
         padding: 0 1rem;
