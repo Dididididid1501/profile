@@ -288,8 +288,6 @@ footer {
     .resume-grid > div:last-child {
         order: 1; /* правая колонка (опыт) — первый */
     }
-
-    }
     .container {
         padding: 0 1rem;
     }
@@ -325,7 +323,7 @@ footer {
         gap: 1rem;
     }
     .card {
-        padding: 1rem;
+        padding: 0.5rem;
     }
 }
 /* Optional: базовое подчёркивание для терминов с тултипом */
