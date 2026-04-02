@@ -1,4 +1,4 @@
-// ---- Десктопная версия: тултип при наведении ----
+// ---- Десктопная версия: тултип при наведении с оптимизацией ----
 (function() {
     const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     if (!isTouch) {
@@ -17,7 +17,7 @@
             z-index: 99999;
             pointer-events: none;
             opacity: 0;
-            transition: opacity 0.2s;
+            transition: opacity 0.15s;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
             font-family: inherit;
             line-height: 1.4;
@@ -25,35 +25,65 @@
         document.body.appendChild(tooltip);
 
         const terms = document.querySelectorAll('.tooltip-term');
-        let timeout;
+        let timeoutHide = null;
+        let currentText = '';
+        let isVisible = false;
+
+        // Throttle для обновления позиции (не чаще 20мс)
+        let throttleTimer = null;
+        function throttledUpdatePosition(event) {
+            if (throttleTimer) return;
+            throttleTimer = setTimeout(() => {
+                updateTooltipPosition(event);
+                throttleTimer = null;
+            }, 20);
+        }
 
         function updateTooltipPosition(event) {
             let left = event.clientX + 15;
             let top = event.clientY - 30;
+            // Получаем размеры тултипа
+            const rect = tooltip.getBoundingClientRect();
+            // Если тултип еще не виден, его размеры могут быть 0, но после установки текста они появятся
+            // Используем requestAnimationFrame для корректировки после рендера
             requestAnimationFrame(() => {
-                const rect = tooltip.getBoundingClientRect();
-                if (rect.right > window.innerWidth) {
-                    left = window.innerWidth - rect.width - 10;
+                const newRect = tooltip.getBoundingClientRect();
+                let finalLeft = left;
+                let finalTop = top;
+                if (newRect.right > window.innerWidth) {
+                    finalLeft = window.innerWidth - newRect.width - 10;
                 }
-                if (rect.left < 0) {
-                    left = 10;
+                if (newRect.left < 0) {
+                    finalLeft = 10;
                 }
-                if (rect.bottom > window.innerHeight) {
-                    top = window.innerHeight - rect.height - 10;
+                if (newRect.bottom > window.innerHeight) {
+                    finalTop = window.innerHeight - newRect.height - 10;
                 }
-                tooltip.style.left = left + 'px';
-                tooltip.style.top = top + 'px';
+                tooltip.style.left = finalLeft + 'px';
+                tooltip.style.top = finalTop + 'px';
             });
         }
 
         function showTooltip(event, text) {
+            if (currentText === text && isVisible) {
+                // Если уже показан тот же текст, просто обновляем позицию
+                throttledUpdatePosition(event);
+                return;
+            }
+            currentText = text;
             tooltip.textContent = text;
             tooltip.style.opacity = '1';
+            isVisible = true;
             updateTooltipPosition(event);
         }
 
         function hideTooltip() {
-            tooltip.style.opacity = '0';
+            if (timeoutHide) clearTimeout(timeoutHide);
+            timeoutHide = setTimeout(() => {
+                tooltip.style.opacity = '0';
+                isVisible = false;
+                currentText = '';
+            }, 100);
         }
 
         terms.forEach(term => {
@@ -62,14 +92,21 @@
             const text = tooltipText.textContent;
 
             term.addEventListener('mouseenter', (e) => {
-                clearTimeout(timeout);
+                if (timeoutHide) {
+                    clearTimeout(timeoutHide);
+                    timeoutHide = null;
+                }
                 showTooltip(e, text);
             });
+
             term.addEventListener('mousemove', (e) => {
-                updateTooltipPosition(e);
+                if (isVisible) {
+                    throttledUpdatePosition(e);
+                }
             });
+
             term.addEventListener('mouseleave', () => {
-                timeout = setTimeout(hideTooltip, 100);
+                hideTooltip();
             });
         });
     }
