@@ -288,7 +288,6 @@ footer {
     .resume-grid > div:last-child {
         order: 1; /* правая колонка (опыт) — первый */
     }
-}
 
     }
     .container {
