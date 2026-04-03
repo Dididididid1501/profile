@@ -292,7 +292,6 @@ footer {
     .navbar {
         flex-direction: column;
         gap: 0.5rem;
-
     }
     .nav-links {
         gap: 1rem;
@@ -331,7 +330,7 @@ footer {
     .container {
         padding: 0 1rem;
     }
-   
+
     .hero h1 {
         font-size: 1.8rem;
     }
