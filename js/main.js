@@ -145,3 +145,28 @@ window.addEventListener('load', () => {
         }
     });
 });
+// Получаем элементы
+const modal = document.getElementById('modal');
+const modalImg = document.getElementById('modalImage');
+const profilePhoto = document.getElementById('profile-Photo');
+const closeBtn = document.getElementsByClassName('close')[0];
+
+// При клике на фото профиля
+profilePhoto.onclick = function() {
+    modal.style.display = "flex";
+    modalImg.src = this.src;  // подставляем тот же src
+    // можно добавить подпись:
+    // document.getElementById('caption').innerHTML = this.alt;
+}
+
+// Закрытие по крестику
+closeBtn.onclick = function() {
+    modal.style.display = "none";
+}
+
+// Закрытие по клику на фон (на само модальное окно)
+modal.onclick = function(event) {
+    if (event.target === modal) {
+        modal.style.display = "none";
+    }
+}

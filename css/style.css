@@ -73,8 +73,14 @@ body {
     object-fit: cover;
     border: 2px solid #3b82f6;
     box-shadow: 0 4px 4px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition:0.5s;
 }
+.profile-photo:hover{
+    scale:1.2;
 
+}
+}
 .hero-content h1 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -372,27 +378,64 @@ footer {
     display: none;
 }
 /* Модальное окно для фото в профиле */
-.img-modal {
+.modal {
     display: none;
     position: fixed;
-    top: 0;
+    z-index: 1000;
     left: 0;
+    top: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.9);
-    z-index: 100000;
+    cursor: pointer;
+    /* Центрирование содержимого */
     justify-content: center;
     align-items: center;
-    cursor: pointer;
 }
-.img-modal.active {
-    display: flex;
-}
-.img-modal img {
+.modal-photo {
     max-width: 90%;
     max-height: 90%;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+    width: auto;
+    height: auto;
+    object-fit: contain;
+    display: block;
+    margin: auto;
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+    animation: zoom 0.3s;
+    border-radius: 20%
+}
+
+/* Анимация появления */
+@keyframes zoom {
+    from { transform: scale(0.1); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Кнопка закрытия (крестик) */
+.close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.close:hover {
+    color: #bbb;
+}
+
+/* Подпись (необязательно) */
+#caption {
+    margin: auto;
+    display: block;
+    text-align: center;
+    color: #ccc;
+    padding: 10px 0;
 }
 /* Модальное окно для подсказок на мобильных */
 .modal-tooltip {
