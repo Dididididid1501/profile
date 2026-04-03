@@ -57,7 +57,7 @@ body {
     grid-template-columns: 1fr 2fr;   /* пропорции как у колонок резюме */
     gap: 2rem;
     align-items: stretch;             /* ячейки растягиваются по высоте */
-    
+    padding-bottom: 2rem;
 }
 .hero-photo {
     display: flex;
@@ -292,7 +292,7 @@ footer {
     .navbar {
         flex-direction: column;
         gap: 0.5rem;
-        padding: 0.75rem 1rem;
+
     }
     .nav-links {
         gap: 1rem;
@@ -301,8 +301,8 @@ footer {
     }
         .hero {
         grid-template-columns: 1fr;
-        gap: 1rem;
-        padding: 2rem 0;   /* вертикальные отступы, горизонтальные у родителя */
+        gap: 0.75rem;        /* можно чуть уменьшить gap */
+        padding: 0.5rem 0;   /* уменьшенный верхний и нижний отступ */
         text-align: center;
     }
     .hero-photo {
@@ -310,8 +310,8 @@ footer {
         justify-content: center;
     }
     .profile-photo {
-        width: 150px;
-        height: 150px;
+        width: 200px;
+        height: 200px;
     }
     .hero-content {
         text-align: center;
@@ -331,9 +331,7 @@ footer {
     .container {
         padding: 0 1rem;
     }
-    .hero {
-        padding: 2rem 1rem;
-    }
+   
     .hero h1 {
         font-size: 1.8rem;
     }
